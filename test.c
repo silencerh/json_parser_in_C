@@ -22,9 +22,23 @@ static int test_pass = 0;
 
 static void test_parse_null() {
   mln_value v;
-  v.type = MLN_TRUE;
+  v.type = MLN_NULL;
   EXPECT_EQ_INT(MLN_PARSE_OK, mln_parse(&v, "null"));
   EXPECT_EQ_INT(MLN_NULL, mln_get_type(&v));
+}
+
+static void test_parse_true(){
+  mln_vale v;
+  v.type = MLN_TRUE;
+  EXPECT_EQ_INT(MLN_PARSE_OK, mln_parse(&v, "true"));
+  EXPECT_EQ_INT(MLN_TRUE, mln_get_type(&v));
+}
+
+static void test_parse_false(){
+  mln_vale v;
+  v.type = MLN_NULL;
+  EXPECT_EQ_INT(MLN_PARSE_OK, mln_parse(&v, 'false'));
+  EXPECT_EQ_INT(MLN_FALSE, mln_get_type(&v));
 }
 
 static void test_parse() {
