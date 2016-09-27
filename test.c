@@ -23,6 +23,8 @@ static int test_pass = 0;
 
 #define EXPECT_EQ_DOUBLE(expect, actual) EXPECT_EQ_BASE((expect==actual), expect, actual, "%f")
 
+#define EXPECT_EQ_STRING(expect, actual, alength) \
+          EXPECT_EQ_BASE((sizeof(expect)-1)==alength && memcmp(expect, actual, alength)==0, expect, actual, "%s")
 #define TEST_NUMBER(expect, json)\
   do{\
     mln_value v;\
@@ -119,6 +121,17 @@ static void test_parse_root_not_singular() {
     TEST_ERROR(MLN_PARSE_ROOT_NOT_SINGULAR, "null x");
 }
 
+#define mln_init(v) do { (v)->type = MLN_NULL; } while(0)
+
+static void test_access_string(){
+  mln_value v;
+  mln_init(&v);
+  mln_set_string(&v,"",0);
+  EXPECT_EQ_STRING("", mln_get_string(&v), mln_get_string_length(&v));
+  mln_set_string(&v, "Hello", 5);
+  EXPECT_EQ_STRING("Hello", mln_get_string(&v), mln_get_string_length(&v));
+  mln_free(&v);
+}
 static void test_parse() {
   test_parse_null();
   test_parse_true();
@@ -128,6 +141,7 @@ static void test_parse() {
   test_parse_expect_value();
   test_parse_number_too_big();
   test_parse_root_not_singular();
+  test_access_string();
 }
 
 void main() {
